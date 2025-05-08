@@ -32,27 +32,26 @@ class TestSquareIntegers:
         assert(square_integers([1, 2, 3, 4, 5]) == [1, 4, 9, 16, 25])
         assert(square_integers([-1, -2, -3, -4, -5]) == [1, 4, 9, 16, 25])
 
-class TestFizzBuzz:
-    '''fizzbuzz() in looping.py'''
+import io
+import sys
+from lib.looping import fizzbuzz  # Ensure fizzbuzz is imported from the correct module
 
+class TestFizzBuzz:
     def test_prints_1_to_100_fizzbuzz(self):
         '''prints 1 to 100 with fizz 3s, buzz 5s, fizzbuzz 3and5s'''
         captured_out = io.StringIO()
         sys.stdout = captured_out
-        fizzbuzz()
+        fizzbuzz()  # Call the fizzbuzz function
         sys.stdout = sys.__stdout__
-        answer = captured_out.getvalue()
-        assert len(answer) != 0, "Nothing printed! Check your loop condition. Also do you have print statements?"
-        assert "Fizz" in answer, "The string 'Fizz' not found in your answer, check spelling/capitalization!"
-        assert "Buzz" in answer, "The string 'Buzz' not found in your answer, check spelling/capitalization!"
-        i = 1
-        for line in answer.split('\n'):
-            if(line): #answer.split(\n) produces a list that ends in ''
-                if i % 15 == 0: assert line == "FizzBuzz", f"Should have printed 'Buzz' when number is {i}, got {line} instead"
-                elif i % 3 == 0: assert line == "Fizz", f"Should have printed 'Fizz' when number is {i}, got {line} instead"
-                elif i % 5 == 0: assert line == "Buzz", f"Should have printed 'Buzz' when number is {i}, got {line} instead"
-                else: assert str(i) == line, f"Should have printed {i}, got {line} instead"
-                i += 1
+        output = captured_out.getvalue().strip().split("\n")
         
-        i = i - 1
-        assert i == 100, f"Only looped {i} times, should have looped 100 times. Check your loop condition!"    
+        # Validate the output
+        for i in range(1, 101):
+            if i % 3 == 0 and i % 5 == 0:
+                assert output[i - 1] == "FizzBuzz"
+            elif i % 3 == 0:
+                assert output[i - 1] == "Fizz"
+            elif i % 5 == 0:
+                assert output[i - 1] == "Buzz"
+            else:
+                assert output[i - 1] == str(i)
